@@ -118,4 +118,39 @@ class ServicesTest extends TestCase
 
     }
 
+    public function testDeleteServiceWithoutToken()
+    {
+        $service = Service::inRandomOrder()->firstOrFail();
+
+        $response = $this->delete('api/services/' . $service->id , [],  [
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer '
+        ]);
+
+        $response->assertStatus(401)
+            ->assertJsonStructure(['message']);
+    }
+
+    public function testDeleteServiceWithToken()
+    {
+        $service = Service::inRandomOrder()->firstOrFail();
+
+        $user = User::inRandomOrder()->first();
+        $response = $this->delete('api/services/' . $service->id , [],  [
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer ' . $user->api_token
+        ]);
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'message',
+                'data'
+            ]);
+
+        //Dont Exists in database
+        $this->assertDatabaseMissing('services', ['id' => $service->id]);
+
+    }
+
+
 }

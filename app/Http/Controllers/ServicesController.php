@@ -68,5 +68,22 @@ class ServicesController extends Controller
         ]);
     }
 
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        $service = Service::findOrFail($id);
+
+        $service->delete();
+
+        return response()->json([
+            'message' => 'Service has been removed',
+            'data' => new \App\Http\Resources\Service($service)
+        ]);
+    }
 
 }
