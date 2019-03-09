@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Service;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
@@ -64,4 +65,57 @@ class ServicesTest extends TestCase
         ]);
 
     }
+
+
+    public function testUpdateServiceWithoutToken()
+    {
+        //
+        $service = Service::inRandomOrder()->firstOrFail();
+
+        //New data
+        $new = factory(\App\Models\Service::class)->create();
+
+        $response = $this->put('api/services/' . $service->id , $new->toArray(),  [
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer '
+        ]);
+
+        $response->assertStatus(401)
+            ->assertJsonStructure(['message']);
+
+    }
+
+
+    public function testUpdateServiceWithToken()
+    {
+        //
+        $service = Service::inRandomOrder()->firstOrFail();
+
+        //New data
+        $new = factory(\App\Models\Service::class)->create();
+
+        $user = User::inRandomOrder()->first();
+        $response = $this->put('api/services/' . $service->id , $new->toArray(),  [
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer ' . $user->api_token
+        ]);
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'message',
+                'data'
+            ]);
+
+        //Exists in database
+        $test = [
+            'id' => $service->id,
+            'title' => $new->title,
+            'lat' => $new->lat,
+            'long' => $new->long
+        ];
+
+        $this->assertDatabaseHas('services', $test);
+
+    }
+
 }

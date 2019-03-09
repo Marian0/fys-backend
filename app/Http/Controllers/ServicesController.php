@@ -47,5 +47,26 @@ class ServicesController extends Controller
         ]);
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $service = Service::findOrFail($id);
+
+        $service->fill($request->all());
+
+        $service->save();
+
+        return response()->json([
+            'message' => 'Service has been updated',
+            'data' => new \App\Http\Resources\Service($service)
+        ]);
+    }
+
 
 }
