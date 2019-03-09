@@ -23,7 +23,7 @@ services:
 
   db:
     container_name: fys-db
-    image: mysql:latest
+    image: mysql:5.7.25
     volumes:
       - .docker/fys-db/mysql:/var/lib/mysql
       - .docker/fys-db/db/:/docker-entrypoint-initdb.d/
