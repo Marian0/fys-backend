@@ -1,5 +1,4 @@
 FROM php:7.3-fpm
-LABEL maintainer="hello@guillaumebriday.fr"
 
 WORKDIR /tmp
 
