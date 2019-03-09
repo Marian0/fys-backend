@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Service;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 
 class ServicesController extends Controller
 {
@@ -25,7 +25,7 @@ class ServicesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(\Illuminate\Http\Request $request)
+    public function store(Request $request)
     {
 
         $validatedData = $request->validate([
@@ -39,7 +39,7 @@ class ServicesController extends Controller
             'long'=> ['required','regex:/^[-]?((((1[0-7][0-9])|([0-9]?[0-9]))\.(\d+))|180(\.0+)?)$/']
         ]);
 
-        $service = Service::create($request->all());
+        $service = Service::create($validatedData);
 
         return response()->json([
             'message' => 'Service has been added',
