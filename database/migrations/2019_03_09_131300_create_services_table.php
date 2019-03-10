@@ -25,8 +25,8 @@ class CreateServicesTable extends Migration
             $table->string('state');
             $table->string('zip_code');
 
-            $table->decimal('long', 10, 7);
-            $table->decimal('lat', 10, 7);
+            // Add a Point spatial data field named location
+            $table->point('location')->nullable();
         });
     }
 

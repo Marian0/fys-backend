@@ -12,7 +12,7 @@ class ServicesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         return response()->json([
             'data' => \App\Http\Resources\Service::collection(Service::all())
@@ -35,8 +35,9 @@ class ServicesController extends Controller
             'city'=> 'required',
             'state'=> 'required',
             'zip_code'=> 'required',
-            'lat'=> ['required','regex:/^[-]?(([0-8]?[0-9])\.(\d+))|(90(\.0+)?)$/'],
-            'long'=> ['required','regex:/^[-]?((((1[0-7][0-9])|([0-9]?[0-9]))\.(\d+))|180(\.0+)?)$/']
+            'location.lat' => ['required','regex:/^[-]?(([0-8]?[0-9])\.(\d+))|(90(\.0+)?)$/'],
+            'location.lng'=> ['required','regex:/^[-]?((((1[0-7][0-9])|([0-9]?[0-9]))\.(\d+))|180(\.0+)?)$/']
+
         ]);
 
         $service = Service::create($validatedData);

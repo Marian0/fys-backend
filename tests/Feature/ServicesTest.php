@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Service;
 use App\Models\User;
+use Grimzy\LaravelMysqlSpatial\Types\Point;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -22,8 +23,9 @@ class ServicesTest extends TestCase
                     '*' => [
                         'title',
                         'description',
-                        'lat',
-                        'long'
+                        'created_at',
+                        'updated_at',
+                        'location'
                     ]
                 ]
             ]);
@@ -41,14 +43,25 @@ class ServicesTest extends TestCase
 
     }
 
-
     public function testNewServiceWithToken()
     {
 
         $user = User::inRandomOrder()->first();
 
-        $service = factory(\App\Models\Service::class)->create();
-        $response = $this->post('api/services', $service->toArray(), [
+        $data = [
+            'title' => $this->faker->sentence,
+            'description' => $this->faker->text,
+            'address' => $this->faker->address,
+            'city' => $this->faker->city,
+            'state' => $this->faker->state,
+            'zip_code' => $this->faker->postcode,
+            'location' => [
+                'lat' => $this->faker->latitude,
+                'lng' => $this->faker->latitude
+            ]
+        ];
+
+        $response = $this->post('api/services', $data, [
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $user->api_token
         ]);
@@ -60,9 +73,45 @@ class ServicesTest extends TestCase
             ]);
 
         //Exists in database
-        $this->assertDatabaseHas('services', [
-            'id' => $response->json('data.id')
+        $service = Service::where([
+            'id' => $response->json('data.id'),
+            'title' => $data['title'],
+            'city' => $data['city'],
+            'address' => $data['address'],
+        ])->first();
+
+        $this->assertTrue($service instanceof Service);
+        $this->assertTrue($service->location instanceof Point);
+        $this->assertTrue($service->location->getLat() === $data['location']['lat']);
+        $this->assertTrue($service->location->getLng() === $data['location']['lng']);
+    }
+
+
+    public function testNewServiceErrorWithToken()
+    {
+
+        $user = User::inRandomOrder()->first();
+
+        //Some errors in data
+        $data = [
+            'title' => $this->faker->sentence,
+            'zip_code' => $this->faker->postcode,
+            'location' => [
+                'lat' => '123a', //wrong lat
+                //missing long
+            ]
+        ];
+
+        $response = $this->post('api/services', $data, [
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer ' . $user->api_token
         ]);
+
+        $response->assertStatus(422)
+            ->assertJsonStructure([
+                'message',
+                'errors'
+            ]);
 
     }
 
@@ -91,11 +140,23 @@ class ServicesTest extends TestCase
         //
         $service = Service::inRandomOrder()->firstOrFail();
 
-        //New data
-        $new = factory(\App\Models\Service::class)->create();
+
+        $data = [
+            'title' => $this->faker->sentence,
+            'description' => $this->faker->text,
+            'address' => $this->faker->address,
+            'city' => $this->faker->city,
+            'state' => $this->faker->state,
+            'zip_code' => $this->faker->postcode,
+            'location' => [
+                'lat' => $this->faker->latitude,
+                'lng' => $this->faker->latitude
+            ]
+        ];
+
 
         $user = User::inRandomOrder()->first();
-        $response = $this->put('api/services/' . $service->id , $new->toArray(),  [
+        $response = $this->put('api/services/' . $service->id , $data,  [
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $user->api_token
         ]);
@@ -107,14 +168,17 @@ class ServicesTest extends TestCase
             ]);
 
         //Exists in database
-        $test = [
-            'id' => $service->id,
-            'title' => $new->title,
-            'lat' => $new->lat,
-            'long' => $new->long
-        ];
+        $service = Service::where([
+            'id' => $response->json('data.id'),
+            'title' => $data['title'],
+            'city' => $data['city'],
+            'address' => $data['address'],
+        ])->first();
 
-        $this->assertDatabaseHas('services', $test);
+        $this->assertTrue($service instanceof Service);
+        $this->assertTrue($service->location instanceof Point);
+        $this->assertTrue($service->location->getLat() === $data['location']['lat']);
+        $this->assertTrue($service->location->getLng() === $data['location']['lng']);
 
     }
 
