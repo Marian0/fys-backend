@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Service;
+use Grimzy\LaravelMysqlSpatial\Types\Point;
 use Illuminate\Http\Request;
 
 class ServicesController extends Controller
@@ -14,8 +15,26 @@ class ServicesController extends Controller
      */
     public function index(Request $request)
     {
+        //Default center point
+        $center = new Point(0,0);
+
+        if ($request->get('lat') && $request->get('lng')) {
+            $center = new Point($request->get('lat'), $request->get('lng'));
+        }
+
+        //Filter by distance
+        $distanceKm = $request->get('distanceKm');
+
+        $query = Service::query();
+
+        if ($distanceKm) {
+            $query->distanceSphere('location', $center, $distanceKm * 1000);
+        }
+
+        $services = $query->paginate(20);
+
         return response()->json([
-            'data' => \App\Http\Resources\Service::collection(Service::all())
+            'data' => \App\Http\Resources\Service::collection($services)
         ]);
     }
 
