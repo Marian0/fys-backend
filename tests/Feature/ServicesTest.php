@@ -19,7 +19,7 @@ class ServicesTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJsonStructure([
-                'data' => [
+                'services' => [
                     '*' => [
                         'title',
                         'description',
@@ -69,12 +69,12 @@ class ServicesTest extends TestCase
         $response->assertStatus(200)
             ->assertJsonStructure([
                 'message',
-                'data'
+                'service'
             ]);
 
         //Exists in database
         $service = Service::where([
-            'id' => $response->json('data.id'),
+            'id' => $response->json('service.id'),
             'title' => $data['title'],
             'city' => $data['city'],
             'address' => $data['address'],
@@ -164,12 +164,12 @@ class ServicesTest extends TestCase
         $response->assertStatus(200)
             ->assertJsonStructure([
                 'message',
-                'data'
+                'service'
             ]);
 
         //Exists in database
         $service = Service::where([
-            'id' => $response->json('data.id'),
+            'id' => $response->json('service.id'),
             'title' => $data['title'],
             'city' => $data['city'],
             'address' => $data['address'],
@@ -208,7 +208,7 @@ class ServicesTest extends TestCase
         $response->assertStatus(200)
             ->assertJsonStructure([
                 'message',
-                'data'
+                'service'
             ]);
 
         //Dont Exists in database

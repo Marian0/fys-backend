@@ -27,10 +27,11 @@ class AuthController extends Controller
         }
         $user = User::where('email', $request->get('email'))->first();
 
+        $userData = $user->toArray();
+        $userData['api_token'] = $user->api_token;
+
         return response()->json([
-            'user_id' => $user->id,
-            'api_token' => $user->api_token,
+            'user' => $userData
         ]);
     }
-
 }

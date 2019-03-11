@@ -53,8 +53,12 @@ class AuthTest extends TestCase
 
         $response->assertStatus(Response::HTTP_OK)
             ->assertJsonStructure([
-                'user_id',
-                'api_token',
+                'user' => [
+                    'id',
+                    'name',
+                    'email',
+                    'api_token',
+                ]
             ]);
     }
 }

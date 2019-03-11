@@ -34,7 +34,7 @@ class ServicesController extends Controller
         $services = $query->paginate(20);
 
         return response()->json([
-            'data' => \App\Http\Resources\Service::collection($services)
+            'services' => \App\Http\Resources\Service::collection($services)
         ]);
     }
 
@@ -63,7 +63,7 @@ class ServicesController extends Controller
 
         return response()->json([
             'message' => 'Service has been added',
-            'data' => new \App\Http\Resources\Service($service)
+            'service' => new \App\Http\Resources\Service($service)
         ]);
     }
 
@@ -84,7 +84,7 @@ class ServicesController extends Controller
 
         return response()->json([
             'message' => 'Service has been updated',
-            'data' => new \App\Http\Resources\Service($service)
+            'service' => new \App\Http\Resources\Service($service)
         ]);
     }
 
@@ -102,7 +102,7 @@ class ServicesController extends Controller
 
         return response()->json([
             'message' => 'Service has been removed',
-            'data' => new \App\Http\Resources\Service($service)
+            'service' => new \App\Http\Resources\Service($service)
         ]);
     }
 
