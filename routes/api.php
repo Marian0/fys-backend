@@ -1,7 +1,7 @@
 <?php
 
 Route::get('services', 'ServicesController@index');
-
+Route::post('login', 'AuthController@login');
 
 Route::middleware('auth:api')->group(function () {
     Route::post('services', 'ServicesController@store');
