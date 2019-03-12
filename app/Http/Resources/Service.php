@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Grimzy\LaravelMysqlSpatial\Types\Point;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class Service extends JsonResource
@@ -14,6 +15,22 @@ class Service extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        $arr = parent::toArray($request);
+
+        $location = [
+            'lat' => '',
+            'lng' => '',
+        ];
+
+        if ($this->resource->location instanceof Point) {
+            $location = [
+                'lat' => $this->resource->location->getLat(),
+                'lng' => $this->resource->location->getLng(),
+            ];
+        }
+
+        $arr['location'] = $location;
+
+        return $arr;
     }
 }

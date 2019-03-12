@@ -1,6 +1,7 @@
 <?php
 
 Route::get('services', 'ServicesController@index');
+Route::get('services/{id}', 'ServicesController@show');
 Route::post('login', 'AuthController@login');
 
 Route::middleware('auth:api')->group(function () {

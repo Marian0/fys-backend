@@ -41,6 +41,20 @@ class ServicesController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $service = Service::findOrFail($id);
+
+        return response()->json([
+            'service' => new \App\Http\Resources\Service($service)
+        ]);
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
