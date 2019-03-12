@@ -19,6 +19,7 @@ class Service extends Model
         'address',
         'city',
         'state',
+        'country',
         'location',
         'zip_code'
     ];

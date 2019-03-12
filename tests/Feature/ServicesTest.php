@@ -54,6 +54,7 @@ class ServicesTest extends TestCase
             'address' => $this->faker->address,
             'city' => $this->faker->city,
             'state' => $this->faker->state,
+            'country' => $this->faker->country,
             'zip_code' => $this->faker->postcode,
             'location' => [
                 'lat' => $this->faker->latitude,
@@ -147,6 +148,7 @@ class ServicesTest extends TestCase
             'address' => $this->faker->address,
             'city' => $this->faker->city,
             'state' => $this->faker->state,
+            'country' => $this->faker->country,
             'zip_code' => $this->faker->postcode,
             'location' => [
                 'lat' => $this->faker->latitude,

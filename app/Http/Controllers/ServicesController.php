@@ -69,6 +69,7 @@ class ServicesController extends Controller
             'address'=> 'required',
             'city'=> 'required',
             'state'=> 'required',
+            'country'=> 'required',
             'zip_code'=> 'required',
             'location.lat' => ['required','regex:/^[-]?(([0-8]?[0-9])\.(\d+))|(90(\.0+)?)$/'],
             'location.lng'=> ['required','regex:/^[-]?((((1[0-7][0-9])|([0-9]?[0-9]))\.(\d+))|180(\.0+)?)$/']

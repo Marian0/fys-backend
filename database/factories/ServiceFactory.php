@@ -9,6 +9,7 @@ $factory->define(\App\Models\Service::class, function (Faker $faker) {
         'address' => $faker->address,
         'city' => $faker->city,
         'state' => $faker->state,
+        'country' => $faker->country,
         'zip_code' => $faker->postcode,
         'location' => [
             'lat' => $faker->latitude,
