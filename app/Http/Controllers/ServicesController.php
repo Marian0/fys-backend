@@ -31,6 +31,8 @@ class ServicesController extends Controller
             $query->distanceSphere('location', $center, $distanceKm * 1000);
         }
 
+        $query->orderBy('created_at', 'desc');
+
         $services = $query->paginate(20);
 
         return response()->json([
