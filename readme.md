@@ -45,11 +45,10 @@ How we will score it
 - run `composer install`
 - run `docker-compose up`
 
-Access bash container and run:
+Access bash container with `docker-compose exec php bash` and run:
 
-- `docker-compose exec php bash`
 - `php artisan migrate`
-- `php db:seed` for seeding database with dummy data
+- `php artisan db:seed` for seeding database with dummy data
 -  run `vendor/bin/phpunit` for automated unit tests
 
 After this steps you would see laravel default page on `http://localhost:8000`
